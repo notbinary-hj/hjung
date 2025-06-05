@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+  <!-- 모든 요청에 대해 포함(/*) -->
+  <mapping path="/*" decorator="mantisDecorator.jsp"/>
+  <!-- 비동기 요청 배제 -->  
+  <mapping path="/ajax/**" exclude="true" />
+  <!-- 정적 자원 배제 -->  
+  <mapping path="/resources/**" exclude="true"/>
+</sitemesh>
+

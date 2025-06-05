@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+	version="6.0">
+	<display-name>SpringMVCLab</display-name>
+	<welcome-file-list>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>kr.or.ddit.conf.SpringRootContextConfig</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value> <!-- 사용코자 하는 캐릭터셋 -->
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name> <!-- req와 res 모두 적용 true 되게 -->
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>
+		<filter-name>sitemesh</filter-name>
+		<filter-class>org.sitemesh.config.ConfigurableSiteMeshFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>sitemesh</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- 하위 컨테이너 생성 설정. Controller/View layer 등록 Front Controller Pattern : 
+		모든 요청을 집중해서 처리하는 전처리 컨트롤러 분리 구조. Front Controller(DispatcherServlet) 뒤에서 
+		하나의 요청을 전담하는 컨트롤러(command handler, B/E 컨트롤러)가 동작하게 됨. -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/springmvc/dispatcher-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+		<!-- 요청 있을때(서버시작 아니고 요청 기준!)만 생성되는 서블릿(lazy 로딩)을 eager 로딩으로 손님이 오지 않아도 
+			식당 문을 열 준비 해두게 -->
+		<multipart-config>
+			<!-- 업로드 정책 제한 -->
+			<max-file-size>10240000</max-file-size> <!-- 바이트 기준이라 10MB -->
+			<max-request-size>102400000</max-request-size>
+			<file-size-threshold>10240</file-size-threshold>  <!-- 임시 저장소로 넘어가야 하는 파일의 임계점. 이 이상이면 임시저장소로. -->
+		</multipart-config>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<!-- / : 정적 자원에 대한 매핑을 표현하는 고정 url -->
+		<url-pattern>/</url-pattern> <!-- /* 아니고 / -->
+	</servlet-mapping>
+</web-app>

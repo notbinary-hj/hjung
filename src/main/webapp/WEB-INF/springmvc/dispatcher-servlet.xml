@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	"
+>
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false"> 
+		<context:include-filter type="annotation" 
+				expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" 
+				expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	<mvc:annotation-driven></mvc:annotation-driven> 
+	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
+	<!-- 이 엘리먼트 하나로 일괄처리 가능해짐 -->
+	
+<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>  -->
+	
+	<mvc:view-resolvers>
+		<mvc:content-negotiation>
+			<mvc:default-views>
+				<bean class="kr.or.ddit.case03.view.GsonView"/>
+			</mvc:default-views>
+		</mvc:content-negotiation>
+		<mvc:jsp prefix="/WEB-INF/views/" suffix=".jsp"/>  
+	</mvc:view-resolvers>
+	
+	<bean class="org.springframework.web.multipart.support.StandardServletMultipartResolver" 
+		id="multipartResolver"
+	/>  <!-- 멀티파트 파싱용(아직 수동 등록...) 등록하면 스프링이 알아서 해준다. -->
+</beans>

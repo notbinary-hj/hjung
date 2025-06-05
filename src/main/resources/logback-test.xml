@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+
+<statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{15} -%kvp- %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <appender name="myAppender" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%-5level %logger{15} -%kvp- %n---->%msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <logger name="kr.or.ddit" level="info"/>
+  <logger name="jdbc.sqltiming" level="debug"/>
+  <logger name="jdbc.resultsettable" level="info"/>
+  <logger name="org.springframework.web" level="trace"></logger>
+  
+  <root level="error">
+    <appender-ref ref="myAppender" />
+  </root>
+<typeAliases></typeAliases>
+</configuration>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.ProdMapper">
+	<resultMap type="ProdVO" id="prodMap" autoMapping="true">
+	<!-- 단순한 규칙성은 따로 설정 안해도 됨 -->
+		<!-- pk컬럼을 세트로 바인딩할땐 id 엘리먼트 사용 -->
+		<!-- 위 줄이 setter로 바뀜(setProdName) 조회한 이 컬럼의 값을 이 프로퍼티에 집어넣겠다 -->
+		<!-- 일대일, has A 관계여서 association 사용해 바인드 -->
+		<association property="lprod" javaType="LprodVO" autoMapping="true"/>
+		<association property="buyer" javaType="BuyerVO" autoMapping="true"/>
+										<!-- BuyerVO를 먼저 만들어주란 뜻 -->
+	</resultMap>
+	<select id="selectProdList" resultMap="prodMap">
+		SELECT
+			PROD_ID
+			, PROD_NAME
+			, BUYER_ID
+			, LPROD_GU
+			, PROD_PRICE
+			, PROD_COST
+			, PROD_OUTLINE
+			, LPROD_NAME
+			, BUYER_NAME
+			, BUYER_ADD1
+		FROM PROD NATURAL JOIN LPROD
+				  NATURAL JOIN BUYER
+	</select>
+	<select id="selectProdListForMap" resultType="hashMap">
+<!-- 	map은 인터페이스고, 구현체를 결정해줘야 해서 hashMap -->
+		SELECT
+			PROD_ID
+			, PROD_NAME
+			, BUYER_ID
+			, LPROD_GU
+			, PROD_PRICE
+			, PROD_COST
+			, PROD_OUTLINE
+			, LPROD_NAME
+			, BUYER_NAME
+			, BUYER_ADD1 "buyeradd1"
+		FROM PROD NATURAL JOIN LPROD
+				  NATURAL JOIN BUYER
+	</select>
+<!-- 	<resultMap type="ProdVO" id="prodDetailMap" extends="prodMap"></resultMap> -->
+	<!-- type은 최종적으로 반환되는 애 / extends로 위의 맵 상속해 추가 가능 -->
+	<select id="selectProd" resultMap="prodMap">
+		SELECT
+		    PROD_ID,
+		    PROD_NAME,
+		    LPROD_GU,
+		    BUYER_ID,
+		    PROD_COST,
+		    PROD_PRICE,
+		    PROD_SALE,
+		    PROD_OUTLINE,
+		    PROD_DETAIL,
+		    PROD_IMG,
+		    PROD_TOTALSTOCK,
+		    PROD_INSDATE,
+		    PROD_PROPERSTOCK,
+		    PROD_SIZE,
+		    PROD_COLOR,
+		    PROD_DELIVERY,
+		    PROD_UNIT,
+		    PROD_QTYIN,
+		    PROD_QTYSALE,
+		    PROD_MILEAGE
+		    , LPROD_NAME
+		    , BUYER_NAME
+		    , BUYER_ADD1
+		    , BUYER_COMTEL
+		    , BUYER_CHARGER
+		FROM
+		    PROD NATURAL JOIN LPROD
+		    	 NATURAL JOIN BUYER 
+		WHERE PROD_ID = #{ASD}
+	</select>
+<!-- 	데이터 매퍼? 데이터의 타입 변환을 담당함. -->
+<!-- 	null 데이터 변환 규칙성을 정의하기 위해, inline attribute를 사용함. -->
+	<insert id="insertProd">
+		<selectKey order="BEFORE" resultType="string" keyProperty="prodId"> <!-- 셀렉트키에선 순서 정의가 가장 중의! -->
+			SELECT
+			    #{lprodGu} ||  
+			    LPAD(NVL(to_number(SUBSTR(MAX(PROD_ID), LENGTH('P101')+1)), 0)+ 1, 6, '0')
+			FROM PROD
+			WHERE LPROD_GU = #{lprodGu}
+		</selectKey>
+	
+		INSERT INTO PROD (
+		    PROD_ID,
+		    PROD_NAME,
+		    LPROD_GU,
+		    BUYER_ID,
+		    PROD_COST,
+		    PROD_PRICE,
+		    PROD_SALE,
+		    PROD_OUTLINE,
+		    PROD_DETAIL,
+		    PROD_IMG,
+		    PROD_TOTALSTOCK,
+		    PROD_INSDATE,
+		    PROD_PROPERSTOCK,
+		    PROD_SIZE,
+		    PROD_COLOR,
+		    PROD_DELIVERY,
+		    PROD_UNIT,
+		    PROD_QTYIN,
+		    PROD_QTYSALE,
+		    PROD_MILEAGE
+		) VALUES (
+			#{prodId},
+			#{prodName},
+			#{lprodGu},
+			#{buyerId},
+			#{prodCost,jdbcType=NUMERIC},
+			#{prodPrice},
+			#{prodSale,jdbcType=NUMERIC},
+			#{prodOutline},
+			#{prodDetail,jdbcType=CLOB},
+			#{prodImg,jdbcType=VARCHAR},
+			#{prodTotalstock,jdbcType=NUMERIC},
+			SYSDATE,
+			#{prodProperstock,jdbcType=NUMERIC},
+			#{prodSize,jdbcType=VARCHAR},
+			#{prodColor,jdbcType=VARCHAR},
+			#{prodDelivery,jdbcType=VARCHAR},
+			#{prodUnit,jdbcType=VARCHAR},
+			#{prodQtyin,jdbcType=NUMERIC},
+			#{prodQtysale,jdbcType=NUMERIC},
+			#{prodMileage,jdbcType=NUMERIC}
+		)
+	</insert>
+	<update id="updateProd">
+		UPDATE PROD
+		SET
+			PROD_COST=#{prodCost},
+			PROD_PRICE=#{prodPrice},
+			PROD_SALE=#{prodSale},
+			PROD_OUTLINE=#{prodOutline},
+			PROD_DETAIL=#{prodDetail},
+			PROD_IMG=#{prodImg},
+			PROD_TOTALSTOCK=#{prodTotalstock},
+			PROD_PROPERSTOCK=#{prodProperstock},
+			PROD_SIZE=#{prodSize},
+			PROD_COLOR=#{prodColor},
+			PROD_DELIVERY=#{prodDelivery},
+			PROD_UNIT=#{prodUnit},
+			PROD_QTYIN=#{prodQtyin},
+			PROD_QTYSALE=#{prodQtysale},
+			PROD_MILEAGE=#{prodMileage}
+		WHERE
+			PROD_ID=#{prodId}
+	</update>
+<!-- 			PROD_INSDATE=#{prodInsdate}, -->
+</mapper>

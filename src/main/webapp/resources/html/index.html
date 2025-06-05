@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SpringMVCLab</title>
+</head>
+<body>
+<h2> ** SpringMVC tutorial ** </h2>
+<h4>
+	spring-webmvc 모듈 기반의  [Model2 아키텍처와 MVC 패턴 구조] 어플리케이션 구현
+</h4>
+<ul>
+	<li>
+		case01 : <a>컨트롤러 bean 등록과 핸들러 메소드의 request 매핑</a>
+		HandlerMapping, @Controller, @RequestMapping(value, methods, consumes, produces)
+	</li>
+	<li>
+		case02 : <a>핸들러 메소드에서 request header[cookie] 처리</a>
+		HandlerAdapter, @RequestHeader, @CookieValue, MultiValueMap, HttpHeaders
+	</li>
+	<li>
+		case03 : <a>컨트롤러에서 뷰를 사용하는 방법(ViewResolver 활용)</a>
+		ContentNegotiatingViewResolver(accept 헤더에 따른 content-type 협상 전략)
+			- GsonView 와 같은 defaultView 로 처리함.
+		InternalResourceViewResolver : prefix 와 suffix 를 활용해 템플릿 엔진으로 응답을 처리함.
+	</li>
+	<li>
+		case04 : <a>컨트롤러에서 뷰로 데이터 전달 방법(Scope 활용 케이스)</a>
+		Model, ModelAndView, @ModelAttribute
+	</li>
+	<li>
+		case05 : <a>컨트롤러에서 흐름 제어 방식(forward, redirect)</a>
+		"forward:" - Model 에 저장 -> forward -> @RequestAttribute
+		"redirect:" - RedirectAttribute.addFlashAttribute -> FlashMap 에 저장
+						-> redirect -> Model 로 복구
+	</li>
+	<li>
+		case06 : <a>핸들러 메소드에서 request parameter 처리</a>
+		@RequestParam(name,required,defaultValue), MultiValueMap
+	</li>
+	<li>
+		case07 : <a>form UI 구성과 데이터 바인딩(Command Object 의 활용)</a>
+		command object (기존 결과 데이터, 여러 데이터라 form이 선행)는 
+		동시에 model attribute(@ModelAttribute) 로 사용됨.
+		@Valid, @Validated(groups), BindingResult(Errors) 검증 결과 데이터.
+									- MODEL_KEY_PREFIX+"모델명"
+	</li>
+	<li>
+		case08 : <a>json 응답을 전송하는 방법</a>
+		 핸들러 메소드의 반환타입으로 response entity 가 반환되는 경우, 
+		 직접 response body 를 형성하는 방법 -> @ReponseBody, @RESTController(@Controller+@ResponseBody) 
+	</li>
+	<li>
+		case09 : <a>json 요청을 수신하는 방법</a>
+		@RequestBody 로 request entity 를 언마샬링 하는 방법
+	</li>
+	<li>
+		case10 : <a>파일 핸들링(업다운로드)</a>
+	</li>
+</ul>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
